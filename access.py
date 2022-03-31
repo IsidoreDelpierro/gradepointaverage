@@ -408,7 +408,9 @@ class gpaDB:
         query = 'SELECT {} FROM {} '.format(attribute, 
             self.table,
         )
-        query += condition
+        # LIMIT 1 was added to resolve "Unread Results Found" issues
+        #query += condition
+        query += condition + ' LIMIT 1'
         #print("\n", query, end = "")
         cursor.execute(query)
         return cursor.fetchone()[0]
@@ -479,8 +481,10 @@ class gpaDB:
         query = 'SELECT * FROM {} '.format(
             self.table,
         )
-        query += condition
-        print("\n", query, end = "")
+        # LIMIT 1 was added to resolve "Unread Results Found" issues
+        #query += condition
+        query += condition + ' LIMIT 1'
+        #print("\n", query, end = "")
         cursor.execute(query)
         return cursor.fetchone()
         ###########################################################
@@ -591,7 +595,7 @@ class gpaDB:
             self.table,
         )
         query += condition
-        print("\n", query, end = "")
+        #print("\n", query, end = "")
         cursor.execute(query)
         self._db.commit()
     ###########################################################
