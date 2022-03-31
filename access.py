@@ -11,12 +11,9 @@ __version__ = '1.0.0'
 
 
 class gpaDB:
-    
-    connection = ""                 #private
-    lastQuery = ""                  #public
-    magicQuotesActive = False       #private
-    realEscapeStringExists = False  #private
-    database = ""                   #public
+    #private connection
+    #public lastQuery
+    #public db
     
     def __init__(self, **kwargs):
         '''
@@ -373,6 +370,50 @@ class gpaDB:
         return cursor.fetchall()
     ###########################################################
     
+    def sql_features(self, table, record, selector, orderby = []):
+        '''
+            db.sql_set(table, record, selector, orderby)
+            select a set of records from the table for a set condition
+                table is the table from which the data is retrieved
+                record is a dict with key/value pairs corresponding to table schema
+                selector is the property that sets the selection condition
+                orderby species the order in which results are arranged
+        '''
+        #print("This concerns the table {} ".format(table))
+        cursor = self._db.cursor()
+        self.table = table
+        #using pos replacement & string concatenation to build query
+        query = 'SELECT {} '.format(
+            ', '.join(record[i] for i in range(len(record))),
+        )
+        target = 'FROM {} '.format(self.table)
+        
+        condition = 'WHERE '
+        keylist = sorted(selector.keys())
+        values = [ selector[v] for v in keylist]
+        
+        while keylist: #while keylist is not empty
+            condition += keylist[0]
+            condition += " = "
+            if isinstance(values[0], str):
+                condition += "'" #surround strings with quotes
+                condition += values[0]
+                condition += "'"
+            else:
+                condition += str(values[0])
+            values.pop(0)
+            keylist.pop(0)
+            if values: condition += ", "
+            
+        #if no order is specified, order by the first attribute
+        order = ' ORDER BY {}'.format(orderby if orderby else record[0])
+        query += target + condition + order
+        #print("\n", query, end = "")
+        cursor.execute(query)
+        #self._db.commit()
+        return cursor.fetchall()
+    ###########################################################
+    
     def getrec(self, table, identifier):
         '''
             db.getrec(table, identifier)
@@ -650,7 +691,7 @@ def main():
 def test():
     #import os
     db = 'school'     # nera database
-    t = 'student' # test template table
+    #t = 'student' # test template table
     
     records = [
         dict(firstName = 'John', lastName = 'Doe', age = 30, sex = 'M', gpa = 2.24),
@@ -674,8 +715,82 @@ def test():
     #db.sql_do(' CREATE TABLE {} ( id INTEGER PRIMARY KEY, string TEXT ) '.format(t))
     #print('Done.')
     #####################################################################
-    print('\nNOW LET\'S RUN SOME TESTS. ', end = '')
-    print('Insert into table ... ', end = '')
+    print('\nNOW LET\'S RUN SOME TESTS. ')
+    print('First let\'s see what we have in ... ')
+    t = 'students'
+    print('\nReading from {} table ...'.format(t))
+    for row in db.getrecs(t): print(row)
+    print('Done.')
+    t = 'programs'
+    print('\nReading from {} table ...'.format(t))
+    for row in db.getrecs(t): print(row)
+    print('Done.')
+    t = 'courses'
+    print('\nReading from {} table ...'.format(t))
+    for row in db.getrecs(t): print(row)
+    print('Done.\n')
+    t = 'students'
+    print('We have {} students in this database.\n'.format(db.countrecs(t)))
+    
+    print('\nNow let\'s add two more accounts for two more students')
+    t = 'accounts'
+    accounts = [
+        dict(id = '', username = 'mary', password = 'sibley'),
+        dict(id = '', username = 'kobe', password = 'bryant')
+    ]
+    accid = [1,2,3,4,5,6,7,8,9,0]
+    table = 'students'
+    print('... ')
+    for i in range(len(accounts)):
+        #accid[i] = db.insert(t, accounts[i])
+        accountid = db.insert(t, accounts[i])
+        accid[i] = accountid
+        #studentid = db.insert(table, students[i]) 
+        print(db.getrec(t, accountid))
+        #print(db.getrec(table, studentid))
+    print('Done adding new accounts.\n_________________________')
+    
+    
+    
+    students = [
+        dict(id = accid[0], matricule = 'FE11A097', fname = 'Mary', lname = 'Sibley', program = 1, cumgpa = 2.23),
+        dict(id = accid[1], matricule = 'FE11A082', fname = 'Kobe', lname = 'Bryant', program = 2, cumgpa = 1.17)
+    ]
+    
+    #populate students table
+    
+    print('... ')
+    #print(students[0], '\n', students[1])
+    for i in range(len(students)):
+        db.insert(table, students[i]) 
+        #print(students[i], '\n', accid[i])
+        print(db.getrec(table, accid[i]))
+    print('Done adding new students.\n_________________________')
+    
+    
+    
+    #print('... ', end = '')
+    #for account in accounts:
+         
+        #db.insert(db.table, account)
+            #for student in students: db.insert(db.table, student)
+            #print('Done inserting into {} table'.format(db.table))
+    #print('Done inserting into {} table'.format(db.table))
+    
+    t = 'students'
+    name = db.sql_value(t, 'lname', 2)
+    gpa = db.sql_value(t, 'cumgpa', 2)
+    message = 'The student named {} has a cummulative GPA of {}'.format(name, gpa)
+    print(message)
+    print('\nHis complete information is:\n', db.getrec(t, 2))
+    t = 'semesters'
+    attributes = ['semester', 'level', 'gpa']
+    condition = dict(id = 2)
+    print('\nWe also have his semester GPAs below:')
+    for row in db.sql_features(t, attributes, condition, 'semester'): print(row)
+    #####################################################################
+    
+    t = 'student'
     for record in records: db.insert(t, record)
     print('Done.')
     
