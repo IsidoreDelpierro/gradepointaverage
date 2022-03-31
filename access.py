@@ -241,7 +241,7 @@ class gpaDB:
             dict(id = '', code = 'CEF207', title = 'Programming I', status = 'C', value = 4),
             dict(id = '', code = 'CEF209', title = 'Discrete Mathematics', status = 'C', value = 4),
             dict(id = '', code = 'CEF211', title = 'Boolean Algebra and Logic Circuits', status = 'C', value = 4),
-            dict(id = '', code = 'CEF217', title = 'Basic Electronics', status = 'C', value = 4),
+            dict(id = '', code = 'EEF217', title = 'Basic Electronics', status = 'C', value = 4),
             dict(id = '', code = 'CEF202', title = 'Computer Architecture', status = 'C', value = 4),
             dict(id = '', code = 'CEF204', title = 'Data Structures and Algorithms', status = 'C', value = 4)
         ]
@@ -480,7 +480,7 @@ class gpaDB:
             self.table,
         )
         query += condition
-        #print("\n", query, end = "")
+        print("\n", query, end = "")
         cursor.execute(query)
         return cursor.fetchone()
         ###########################################################
@@ -591,7 +591,7 @@ class gpaDB:
             self.table,
         )
         query += condition
-        #print("\n", query, end = "")
+        print("\n", query, end = "")
         cursor.execute(query)
         self._db.commit()
     ###########################################################
@@ -620,7 +620,7 @@ class gpaDB:
                 orderby species the order in which results are arranged
         '''
         #using string concatenation to build condition
-        condition = 'WHERE '
+        condition = ' WHERE '
         keylist = sorted(selector.keys())
         values = [ selector[v] for v in keylist]
         
@@ -776,8 +776,21 @@ class Leverage:
     
 class Globals:
     
-    def __init__(self):
-        pass
+    def __init__(self, **kwargs):
+        '''
+            info = Globals( )
+            constructor method
+                takes no default arguments
+        '''
+        self.table = 'results' 
+        self.matricule = kwargs.get('matricule')
+        self.semester = kwargs.get('semester', 1)
+        self.level = kwargs.get('level', 200)
+        #self.setStudentId(self.getStudentId(kwargs.get('matricule')))
+        
+        self.db = gpaDB(database = 'flash')
+        self.setStudentId(self.getStudentId(kwargs.get('matricule')))
+    ########################################
     
     def instantiate(self, record):
         pass
@@ -790,6 +803,43 @@ class Globals:
     
     def findBySQL(self, sql=""):
         pass
+    
+    def setStudentId(self, identity):
+        '''
+            info.setStudentId(identity)
+            receives an integer and sets a class variable
+                identity is the unique identifier that maps to the student we want
+        '''
+        print('from Globals.setStudentId')
+        self.identifier = identity
+    ########################################
+    
+    def getStudentId(self, matricule):
+        '''
+            info.getStudentId(matricule)
+            receives a matricule and returns the corresponding id as recorded in the db
+                matricule is the unique identifier of the student we want
+        '''
+        print('from Globals.getStudentId')
+        table = 'students'
+        selector = dict(matricule = self.matricule)
+        print(selector)
+        studentId = gpaDB.sql_value('students', 'id', selector)
+        #selector = dict(matricule = self.matricule)
+        name = self.db.sql_value(table, 'id', selector)
+        #print('{} has id {}'.format(matricule, studentId))
+        return studentId
+    ########################################
+    @property
+    def table(self): return self._dbTable
+    @table.setter
+    def table(self, t): self._dbTable = t
+    @table.deleter
+    def table(self): self._dbTable = 'test'
+    
+    def close(self):
+        self._db.close()
+        del self._dbTable
     
     
     
@@ -824,6 +874,11 @@ def test():
     #print('Create database file {} ...'.format(db), end = ' ')
     #db = gpaDB( database = db, table = t )
     db = gpaDB( database = 'flash')
+    matricule = 'FE11A076'
+    info = Globals(matricule = matricule)
+    #studentId = info.setStudentId(info.getStudentId(matricule))
+    print(info.matricule, info.semester, info.level, info.table)
+    #print(info.identifier)
     
     #gpa = gpaDB( database = 'flash')
     #print('Done creating database.\n________________________')
