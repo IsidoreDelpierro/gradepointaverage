@@ -11,9 +11,7 @@ __version__ = '1.0.0'
 
 
 class gpaDB:
-    #private connection
-    #public lastQuery
-    #public db
+    #private connection, public lastQuery, public db
     
     def __init__(self, **kwargs):
         '''
@@ -36,36 +34,37 @@ class gpaDB:
             yield dict(row)
     ###########################################################
     
-    def createTables(self, cursor):
+    def create_tables(self, cursor):
         '''
             db.create_tables(cursor)
             method for creating necessary tables for specific application
                 cursor is cursor obtained from filename property declaration
         '''
-        sqlAccounts = """CREATE TABLE IF NOT EXISTS accounts (
+        #CREATE TABLE IF NOT EXISTS accounts (
+        sqlAccounts = """CREATE TABLE accounts (
                         id INT(5) PRIMARY KEY AUTO_INCREMENT,
                         username VARCHAR(30) NOT NULL,
                         password VARCHAR(15) NOT NULL)"""
                         
-        sqlConstants = """CREATE TABLE IF NOT EXISTS constants (
+        sqlConstants = """CREATE TABLE constants (
                         id INT(5) PRIMARY KEY AUTO_INCREMENT,
                         constant VARCHAR(2) NOT NULL,
                         value FLOAT NOT NULL)"""
                         
-        sqlCourses = """CREATE TABLE IF NOT EXISTS courses (
+        sqlCourses = """CREATE TABLE courses (
                         id INT(5) PRIMARY KEY AUTO_INCREMENT,
                         code CHAR(6) NOT NULL,
                         title VARCHAR(60) NOT NULL,
                         status CHAR(1) NOT NULL,
                         value INT(2) NOT NULL)"""
                         
-        sqlPrograms = """CREATE TABLE IF NOT EXISTS programs (
-                        id INT(5) PRIMARY KEY AUTO_INCREMENT,
+        sqlPrograms = """CREATE TABLE programs (
+                        pid INT(5) PRIMARY KEY AUTO_INCREMENT,
                         program VARCHAR(60) NOT NULL,
                         department VARCHAR(60) NOT NULL,
                         faculty VARCHAR(60) NOT NULL)"""
                         
-        sqlResults = """CREATE TABLE IF NOT EXISTS results (
+        sqlResults = """CREATE TABLE results (
                         id INT(5) NOT NULL,
                         semester INT(1) NOT NULL,
                         level INT(3) NOT NULL,
@@ -73,61 +72,128 @@ class gpaDB:
                         grade VARCHAR(2) NOT NULL,
                         PRIMARY KEY (id, semester, level, code))"""
                         
-        sqlSemesters = """CREATE TABLE IF NOT EXISTS semesters (
+        sqlSemesters = """CREATE TABLE semesters (
                         id INT(5) NOT NULL,
                         semester INT(1) NOT NULL,
                         level INT(3) NOT NULL,
                         gpa FLOAT NOT NULL,
                         PRIMARY KEY (id, semester, level))"""
                         
-        sqlStudents = """CREATE TABLE IF NOT EXISTS students (
+        sqlStudents = """CREATE TABLE students (
                         id INT(5) PRIMARY KEY NOT NULL,
                         matricule CHAR(8) NOT NULL,
                         fname VARCHAR(15) NOT NULL,
                         lname VARCHAR(15) NOT NULL,
-                        program INT(2) NOT NULL,
+                        prog INT(2) NOT NULL,
                         cumgpa FLOAT NOT NULL)"""
                         
-        sqlHonours = """CREATE TABLE IF NOT EXISTS honours (
+        sqlHonours = """CREATE TABLE honours (
                         id INT(5) PRIMARY KEY AUTO_INCREMENT,
                         honour VARCHAR(60) NOT NULL)"""
                         
-        print('\nCREATING DATABASE TABLES.')
         #accounts table
-        cursor.execute(sqlAccounts)
-        if cursor: print('Table Successfully Created: accounts')
-        else: print('Table Creation Unsuccessful: accounts')
+        try:
+            cursor.execute(sqlAccounts)
+            print('\nCREATING DATABASE TABLES.')
+            print('Table Successfully Created: accounts')
+        except:
+            print('\nDATABASE TABLES LOCATED.')
+            print('Table found: accounts')
+        #cursor.execute(sqlAccounts)
+        #if cursor: print('Table Successfully Created: accounts')
+        #else: print('Table Creation Unsuccessful: accounts')
         #constants table
-        cursor.execute(sqlConstants)
-        if cursor: print('Table Successfully Created: constants')
-        else: print('Table Creation Unsuccessful: constants')
+        try:
+            cursor.execute(sqlConstants)
+            print('Table Successfully Created: constants')
+        except:
+            print('Table found: constants')
         #courses table
-        cursor.execute(sqlCourses)
-        if cursor: print('Table Successfully Created: courses')
-        else: print('Table Creation Unsuccessful: courses')
+        try:
+            cursor.execute(sqlCourses)
+            print('Table Successfully Created: courses')
+        except:
+            print('Table found: courses')
+        ############
+        #cursor.execute(sqlCourses)
+        #if cursor: print('Table Successfully Created: courses')
+        #else: print('Table Creation Unsuccessful: courses')
         #programs table
-        cursor.execute(sqlPrograms)
-        if cursor: print('Table Successfully Created: programs')
-        else: print('Table Creation Unsuccessful: programs')
+        try:
+            cursor.execute(sqlPrograms)
+            print('Table Successfully Created: programs')
+        except:
+            print('Table found: programs')
+        ############
+        #cursor.execute(sqlPrograms)
+        #if cursor: print('Table Successfully Created: programs')
+        #else: print('Table Creation Unsuccessful: programs')
         #results table
-        cursor.execute(sqlResults)
-        if cursor: print('Table Successfully Created: results')
-        else: print('Table Creation Unsuccessful: results')
+        try:
+            cursor.execute(sqlResults)
+            print('Table Successfully Created: results')
+        except:
+            print('Table found: results')
+        ############
+        #cursor.execute(sqlResults)
+        #if cursor: print('Table Successfully Created: results')
+        #else: print('Table Creation Unsuccessful: results')
         #semesters table
-        cursor.execute(sqlSemesters)
-        if cursor: print('Table Successfully Created: semesters')
-        else: print('Table Creation Unsuccessful: semesters')
+        try:
+            cursor.execute(sqlSemesters)
+            print('Table Successfully Created: semesters')
+        except:
+            print('Table found: semesters')
+        ############
+        #cursor.execute(sqlSemesters)
+        #if cursor: print('Table Successfully Created: semesters')
+        #else: print('Table Creation Unsuccessful: semesters')
         #students table
-        cursor.execute(sqlStudents)
-        if cursor: print('Table Successfully Created: students')
-        else: print('Table Creation Unsuccessful: students')
+        try:
+            cursor.execute(sqlStudents)
+            print('Table Successfully Created: students')
+        except:
+            print('Table found: students')
+        ############
+        #cursor.execute(sqlStudents)
+        #if cursor: print('Table Successfully Created: students')
+        #else: print('Table Creation Unsuccessful: students')
         #honours table
-        cursor.execute(sqlHonours)
-        if cursor: print('Table Successfully Created: honours')
-        else: print('Table Creation Unsuccessful: honours')
+        try:
+            cursor.execute(sqlHonours)
+            print('Table Successfully Created: honours')
+            print('\nDone creating tables.\n_____________________')
+        except:
+            print('Table found: honours')
+            print('\nAll tables found.\n_________________')
+        ############
+        #cursor.execute(sqlHonours)
+        #if cursor: print('Table Successfully Created: honours')
+        #else: print('Table Creation Unsuccessful: honours')
         
-        print('\nDone creating tables.\n_____________________')
+    ###########################################################
+        student = 'student'
+        images = 'images'
         
+        sql = """CREATE TABLE IF NOT EXISTS student (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                firstName VARCHAR(20) NOT NULL,
+                lastName VARCHAR(20),
+                age INT,
+                sex CHAR(1),
+                gpa FLOAT)"""
+        cursor.execute("DROP TABLE IF EXISTS {}".format(student))
+        cursor.execute(sql)
+        if cursor: print('Table Successfully Created: {}'.format(student))
+        else: print('Table Creation Unsuccessful: {}'.format(student))
+        
+        sql = """CREATE TABLE IF NOT EXISTS images (
+                id INT PRIMARY KEY,
+                data MEDIUMBLOB)"""
+        cursor.execute(sql)
+        if cursor: print('Table Successfully Created: {}'.format(images))
+        else: print('Table Creation Unsuccessful: {}'.format(images)) 
+    ###########################################################       
     
     def populate_database(self):
         '''
@@ -198,8 +264,8 @@ class gpaDB:
         #populate programs table
         self.table = 'programs'
         programs = [
-            dict(id = '', program = 'Software Engineering', department = 'Computer Engineering', faculty = 'Faculty of Engineering and Technology'),
-            dict(id = '', program = 'Network Engineering', department = 'Computer Engineering', faculty = 'Faculty of Engineering and Technology')
+            dict(pid = '', program = 'Software Engineering', department = 'Computer Engineering', faculty = 'Faculty of Engineering and Technology'),
+            dict(pid = '', program = 'Network Engineering', department = 'Computer Engineering', faculty = 'Faculty of Engineering and Technology')
         ]
         print('... ', end = '')
         for program in programs: self.insert(self.table, program)
@@ -246,15 +312,16 @@ class gpaDB:
         #populate students table
         self.table = 'students'
         students = [
-            dict(id = 1, matricule = 'FE11A076', fname = 'Fonyuy', lname = 'Isidore', program = 1, cumgpa = 3.03),
-            dict(id = 2, matricule = 'FE11A181', fname = 'Yufanyi', lname = 'Terrence', program = 2, cumgpa = 3.69)
+            dict(id = 1, matricule = 'FE11A076', fname = 'Fonyuy', lname = 'Isidore', prog = 1, cumgpa = 3.03),
+            dict(id = 2, matricule = 'FE11A181', fname = 'Yufanyi', lname = 'Terrence', prog = 2, cumgpa = 3.69)
         ]
         print('... ', end = '')
         for student in students: self.insert(self.table, student)
         print('Done inserting into {} table'.format(self.table))
         print('\nDone populating tables.\n_______________________')
+    ###########################################################
         
-    def create_tables(self, cursor):
+    def createTables(self, cursor):
         '''
             db.create_tables(cursor)
             method for creating necessary tables for specific application
@@ -324,7 +391,7 @@ class gpaDB:
         return cursor.fetchone()
     ###########################################################
     
-    def sql_value(self, table, attribute, identifier):
+    def sql_value(self, table, attribute, selector):
         '''
             db.sql_query_row( attribute[, identifier] )
             query for a single value
@@ -335,7 +402,8 @@ class gpaDB:
         cursor = self._db.cursor()
         self.table = table
         #use pos replacement & string concatenation to build query
-        condition = ' WHERE id = {}'.format(identifier)
+        #condition = ' WHERE id = {}'.format(identifier)
+        condition = self.build_condition(selector)
         query = 'SELECT {} FROM {} '.format(attribute, 
             self.table,
         )
@@ -370,9 +438,9 @@ class gpaDB:
         return cursor.fetchall()
     ###########################################################
     
-    def sql_features(self, table, record, selector, orderby = []):
+    def sql_features(self, table, record, selector, limit = [], orderby = []):
         '''
-            db.sql_set(table, record, selector, orderby)
+            db.sql_features(table, record, selector, orderby)
             select a set of records from the table for a set condition
                 table is the table from which the data is retrieved
                 record is a dict with key/value pairs corresponding to table schema
@@ -388,41 +456,25 @@ class gpaDB:
         )
         target = 'FROM {} '.format(self.table)
         
-        condition = 'WHERE '
-        keylist = sorted(selector.keys())
-        values = [ selector[v] for v in keylist]
+        condition = self.build_condition(selector, limit, orderby)
         
-        while keylist: #while keylist is not empty
-            condition += keylist[0]
-            condition += " = "
-            if isinstance(values[0], str):
-                condition += "'" #surround strings with quotes
-                condition += values[0]
-                condition += "'"
-            else:
-                condition += str(values[0])
-            values.pop(0)
-            keylist.pop(0)
-            if values: condition += ", "
-            
-        #if no order is specified, order by the first attribute
-        order = ' ORDER BY {}'.format(orderby if orderby else record[0])
-        query += target + condition + order
-        #print("\n", query, end = "")
+        query += target + condition
+        #print("\n\nFrom sql_features\n", query)
         cursor.execute(query)
         #self._db.commit()
         return cursor.fetchall()
     ###########################################################
     
-    def getrec(self, table, identifier):
+    def getrec(self, table, selector):
         '''
-            db.getrec(table, identifier)
+            db.getrec(table, selector)
             get a single row, by id
         '''
         cursor = self._db.cursor()
         self.table = table
         #use pos replacement & string concatenation to build query
-        condition = ' WHERE id = {}'.format(identifier)
+        #condition = ' WHERE id = {}'.format(identifier)
+        condition = self.build_condition(selector)
         query = 'SELECT * FROM {} '.format(
             self.table,
         )
@@ -488,11 +540,11 @@ class gpaDB:
         return cursor.lastrowid
     ###########################################################
     
-    def update(self, table, identifier, record):
+    def update(self, table, selector, record):
         '''
-            db.update(table, identifier, record)
+            db.update(table, selector, record)
             update a row in a table
-                identifier is the value of the id column for the row to be updated
+                selector is a dictionary with the key/value pair that locates the row to be updated
                 record is a dict with key/value pairs corresponding to table schema
         '''
         cursor = self._db.cursor()
@@ -500,7 +552,8 @@ class gpaDB:
         keylist = sorted(record.keys())
         values = [ record[v] for v in keylist] #list of values ordered by key
         #use pos replacement & string concatenation to build query
-        condition = ' WHERE id = {}'.format(identifier)
+        #condition = ' WHERE id = {}'.format(identifier)
+        condition = self.build_condition(selector)
         query = 'UPDATE {} SET '.format(
             self.table,
         )
@@ -523,15 +576,16 @@ class gpaDB:
         self._db.commit()
     ###########################################################
     
-    def delete(self, table, identifier):
+    def delete(self, table, selector):
         '''
-            db.delete(table, identifier)
-            delete a row from the table, by id
+            db.delete(table, selector)
+            delete a row from the table, by selector
         '''
         cursor = self._db.cursor()
         self.table = table
         #use pos replacement & string concatenation to build query
-        condition = ' WHERE id = {}'.format(identifier)
+        #condition = ' WHERE id = {}'.format(identifier)
+        condition = self.build_condition(selector)
         query = 'DELETE FROM {} '.format(
             self.table,
         )
@@ -556,6 +610,43 @@ class gpaDB:
         return cursor.fetchone()[0]
     ###########################################################
     
+    def build_condition(self, selector, limit = [], orderby = []):
+        '''
+            db.build_condition(selector, limit, orderby)
+            builds the condition and sets a limit and an order to data retrieved
+                selector is the condition that specifies what data is retrieved
+                limit sets a limit to the number of records retrieved
+                orderby species the order in which results are arranged
+        '''
+        #using string concatenation to build condition
+        condition = 'WHERE '
+        keylist = sorted(selector.keys())
+        values = [ selector[v] for v in keylist]
+        
+        while keylist: #while keylist is not empty
+            condition += keylist[0]
+            condition += " = "
+            if isinstance(values[0], str):
+                condition += "'" #surround strings with quotes
+                condition += values[0]
+                condition += "'"
+            else:
+                condition += str(values[0])
+            values.pop(0)
+            keylist.pop(0)
+            if values: condition += " AND "
+            
+        #order = ' ORDER BY {}'.format(orderby if orderby else record[0])
+        if orderby: condition += ' ORDER BY {}'.format(orderby)
+        #if limit is specified, set limit
+        if limit:
+            if isinstance(limit, int):
+                limiter = ' LIMIT {}'.format(limit)
+                condition += limiter
+        #print("\n...", condition)
+        return condition
+    ###########################################################
+    
     ### filename property
     @property
     def filename(self):
@@ -565,22 +656,48 @@ class gpaDB:
     def filename(self, fn):
         self._dbFilename = fn
         self._db = mysql.connector.connect(host = 'localhost', database = 'mysql', user = 'root', password = '')
-        
-        cursor = self._db.cursor()
-        cursor.execute('CREATE DATABASE IF NOT EXISTS {}'.format(self.filename))
-        print('\nDATABASE CREATION.', end = '')
-        if cursor:  #if success, close default and connect to new database
-            print('\nDatabase Created Successfully: {}'.format(self.filename))
+        ########################################################################
+        try:
             self._db = mysql.connector.connect(host = 'localhost', database = self.filename, user = 'root', password = '')
             cursor = self._db.cursor()
-        else:
-            print('\nDatabase Creation Unsuccessful: {}'.format(self._db))
-            self._db.close()
+        except:
+            cursor = self._db.cursor()
+            try:
+                print('\nDATABASE CREATION...', end = '')
+                cursor.execute('CREATE DATABASE {}'.format(self.filename))
+            except:
+                print('\nDatabase Creation Unsuccessful: {}.\nShutting down'.format(self._db))
+                self._db.close()
+            else:
+                print('\nDatabase Created Successfully: {}'.format(self.filename))
+                try:
+                    self._db = mysql.connector.connect(host = 'localhost', database = self.filename, user = 'root', password = '')
+                    cursor = self._db.cursor()
+                except:
+                    print('Unable to connect to newly created database: {}.\nShutting down.\n'.format(self.filename))
+                    self._db.close()
+                else:
+                    print('Successfully connected to the new database:... {}'.format(self.filename))
+                    self.create_tables(cursor)
+                    self.populate_database()
+                
             
-        self.create_tables(cursor)
-        self.createTables(cursor)
-        self.populate_database()
+            
+            
+            
+            #cursor = self._db.cursor()
+        else:
+            print('Successfully connected to existing database:... {}'.format(self.filename))
+        ########################################################################
         
+        
+        if cursor:  #if success, close default and connect to new database
+            pass
+        else:
+            pass
+            
+        #self.createTables(cursor)
+        ########################################################################
         
     @filename.deleter
     def filename(self):
@@ -703,7 +820,7 @@ def test():
 
     print('version', __version__)
     
-    print('Create database file {} ...'.format(db), end = ' ')
+    #print('Create database file {} ...'.format(db), end = ' ')
     #db = gpaDB( database = db, table = t )
     db = gpaDB( database = 'flash')
     
@@ -746,15 +863,15 @@ def test():
         accountid = db.insert(t, accounts[i])
         accid[i] = accountid
         #studentid = db.insert(table, students[i]) 
-        print(db.getrec(t, accountid))
-        #print(db.getrec(table, studentid))
+        print(db.getrec(t, dict(id = accountid)))
+        #print(db.getrec(table, dict(id = studentid)))
     print('Done adding new accounts.\n_________________________')
     
     
     
     students = [
-        dict(id = accid[0], matricule = 'FE11A097', fname = 'Mary', lname = 'Sibley', program = 1, cumgpa = 2.23),
-        dict(id = accid[1], matricule = 'FE11A082', fname = 'Kobe', lname = 'Bryant', program = 2, cumgpa = 1.17)
+        dict(id = accid[0], matricule = 'FE11A097', fname = 'Mary', lname = 'Sibley', prog = 1, cumgpa = 2.23),
+        dict(id = accid[1], matricule = 'FE11A082', fname = 'Kobe', lname = 'Bryant', prog = 2, cumgpa = 1.17)
     ]
     
     #populate students table
@@ -764,7 +881,7 @@ def test():
     for i in range(len(students)):
         db.insert(table, students[i]) 
         #print(students[i], '\n', accid[i])
-        print(db.getrec(table, accid[i]))
+        print(db.getrec(table, dict(id = accid[i])))
     print('Done adding new students.\n_________________________')
     
     
@@ -778,17 +895,21 @@ def test():
     #print('Done inserting into {} table'.format(db.table))
     
     t = 'students'
-    name = db.sql_value(t, 'lname', 2)
-    gpa = db.sql_value(t, 'cumgpa', 2)
+    condition = dict(id = 2)
+    name = db.sql_value(t, 'lname', condition)
+    gpa = db.sql_value(t, 'cumgpa', condition)
     message = 'The student named {} has a cummulative GPA of {}'.format(name, gpa)
     print(message)
-    print('\nHis complete information is:\n', db.getrec(t, 2))
+    print('\nHis complete information is:\n', db.getrec(t, dict(id = 2)))
     t = 'semesters'
     attributes = ['semester', 'level', 'gpa']
     condition = dict(id = 2)
     print('\nWe also have his semester GPAs below:')
     for row in db.sql_features(t, attributes, condition, 'semester'): print(row)
     #####################################################################
+    db.build_condition(condition, 1, 'gpa')
+    #####################################################################
+    
     
     t = 'student'
     for record in records: db.insert(t, record)
@@ -799,7 +920,7 @@ def test():
     
     print('\nInsert an extra row ... ')
     newid = db.insert(t, dict(firstName = 'Hayley', lastName = 'Marshall', age = 49, sex = 'F', gpa = 1.21),)
-    print(db.getrec(t, newid))
+    print(db.getrec(t, dict(id = newid)))
     print('Done')
     
     print('\nRead again from table ...')
@@ -807,8 +928,8 @@ def test():
     print('Done')
     
     print('\nUpdate table')
-    db.update(t, newid, dict(lastName = 'Mikelson', gpa = 1.35))
-    print(db.getrec(t, newid))
+    db.update(t, dict(id = newid), dict(lastName = 'Mikelson', gpa = 1.35))
+    print(db.getrec(t, dict(id = newid)))
     print('Done')
     
     print('\nRead once more from table ...')
@@ -824,12 +945,13 @@ def test():
     for row in db.sql_set(t, attributes, 'age'): print(row)
     
     print('\n(id is {}'.format(newid), end = '')
-    print(', her name is {}'.format(db.sql_value(t, 'firstName', newid)), end = '')
-    print(', and she\'s {} years old)'.format(db.sql_value(t, 'age', newid)))
+    condition = dict(id = newid)
+    print(', her name is {}'.format(db.sql_value(t, 'firstName', condition)), end = '')
+    print(', and she\'s {} years old)'.format(db.sql_value(t, 'age', condition)))
     print('Find the complete data below...')
-    print(db.getrec(t, newid))
+    print(db.getrec(t, dict(id = newid)))
     print('\nNow delete it')    
-    db.delete(t, newid)
+    db.delete(t, dict(id = newid))
     for row in db.getrecs(t): print(row)
     
     print("\nThere are {} entries on the {} table".format(db.countrecs(t), t))
