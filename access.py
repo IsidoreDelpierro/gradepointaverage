@@ -69,7 +69,8 @@ class gpaDB:
                         semester INT(1) NOT NULL,
                         level INT(3) NOT NULL,
                         code CHAR(6) NOT NULL,
-                        grade VARCHAR(2) NOT NULL,
+                        ca INT NOT NULL,
+                        exam INT NOT NULL,
                         PRIMARY KEY (id, semester, level, code))"""
                         
         sqlSemesters = """CREATE TABLE semesters (
@@ -274,24 +275,24 @@ class gpaDB:
         #populate results table
         self.table = 'results'
         results = [
-            dict(id = 1, semester = 1, level = 200, code = 'CEF201', grade = 'D+'),
-            dict(id = 1, semester = 1, level = 200, code = 'CEF203', grade = 'B+'),
-            dict(id = 1, semester = 1, level = 200, code = 'CEF205', grade = 'C+'),
-            dict(id = 1, semester = 1, level = 200, code = 'CEF207', grade = 'B'),
-            dict(id = 1, semester = 1, level = 200, code = 'CEF209', grade = 'B'),
-            dict(id = 1, semester = 1, level = 200, code = 'CEF211', grade = 'C'),
-            dict(id = 1, semester = 1, level = 200, code = 'EEF217', grade = 'C+'),
-            dict(id = 1, semester = 2, level = 200, code = 'CEF202', grade = 'B'),
-            dict(id = 1, semester = 2, level = 200, code = 'CEF204', grade = 'B'),
-            dict(id = 2, semester = 1, level = 200, code = 'CEF201', grade = 'D+'),
-            dict(id = 2, semester = 1, level = 200, code = 'CEF203', grade = 'D+'),
-            dict(id = 2, semester = 1, level = 200, code = 'CEF205', grade = 'D+'),
-            dict(id = 2, semester = 1, level = 200, code = 'CEF207', grade = 'D+'),
-            dict(id = 2, semester = 1, level = 200, code = 'CEF209', grade = 'D+'),
-            dict(id = 2, semester = 1, level = 200, code = 'CEF211', grade = 'D+'),
-            dict(id = 2, semester = 1, level = 200, code = 'EEF217', grade = 'D+'),
-            dict(id = 2, semester = 2, level = 200, code = 'CEF202', grade = 'D+'),
-            dict(id = 2, semester = 2, level = 200, code = 'CEF204', grade = 'D+')
+            dict(id = 1, semester = 1, level = 200, code = 'CEF201', ca = 8, exam = 39),
+            dict(id = 1, semester = 1, level = 200, code = 'CEF203', ca = 16, exam = 55),
+            dict(id = 1, semester = 1, level = 200, code = 'CEF205', ca = 15, exam = 42),
+            dict(id = 1, semester = 1, level = 200, code = 'CEF207', ca = 21, exam = 48),
+            dict(id = 1, semester = 1, level = 200, code = 'CEF209', ca = 24, exam = 45),
+            dict(id = 1, semester = 1, level = 200, code = 'CEF211', ca = 20, exam = 32),
+            dict(id = 1, semester = 1, level = 200, code = 'EEF217', ca = 14, exam = 45),
+            dict(id = 1, semester = 2, level = 200, code = 'CEF202', ca = 25, exam = 35),
+            dict(id = 1, semester = 2, level = 200, code = 'CEF204', ca = 22, exam = 40),
+            dict(id = 2, semester = 1, level = 200, code = 'CEF201', ca = 13, exam = 34),
+            dict(id = 2, semester = 1, level = 200, code = 'CEF203', ca = 12, exam = 50),
+            dict(id = 2, semester = 1, level = 200, code = 'CEF205', ca = 11, exam = 43),
+            dict(id = 2, semester = 1, level = 200, code = 'CEF207', ca = 9, exam = 62),
+            dict(id = 2, semester = 1, level = 200, code = 'CEF209', ca = 8, exam = 39),
+            dict(id = 2, semester = 1, level = 200, code = 'CEF211', ca = 29, exam = 44),
+            dict(id = 2, semester = 1, level = 200, code = 'EEF217', ca = 8, exam = 39),
+            dict(id = 2, semester = 2, level = 200, code = 'CEF202', ca = 25, exam = 61),
+            dict(id = 2, semester = 2, level = 200, code = 'CEF204', ca = 27, exam = 58),
         ]
         print('... ', end = '')
         for result in results: self.insert(self.table, result)
